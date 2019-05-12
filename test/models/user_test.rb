@@ -51,10 +51,9 @@ class UserTest < ActiveSupport::TestCase
   
   test 'email addresses should be unique' do
     duplicate_user = @user.dup
-    duplicate_user.email = @user.email.upcase
+    duplicate_user.email.downcase!
     @user.save
-    #chaned this test cause it was incompatible after saving in lowercase
-    assert_equal
+    assert_not duplicate_user.valid?
   end
   
   test "email addresses should be saved as lower-case" do
@@ -75,6 +74,6 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "authenticated? should return false for a user with a nil digest" do
-    assert_not @user.authenticated?('')
+    assert_not @user.authenticated?(:remember, '')
   end
 end
